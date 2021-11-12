@@ -1,0 +1,32 @@
+<div mdbModal #modalUpdateTask="mdbModal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-info" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">{{task ? 'UPDATE' : 'ADD'}} TASK</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="md-form mb-5">          
+          <input type="text" class="form-control" mdbInput [(ngModel)]="taskModel.name">
+          <label for="form3">Name</label>          
+        </div>
+
+        <div class="md-form">
+          <textarea type="text" id="form2" class="md-textarea form-control" rows="4" mdbInput [(ngModel)]="taskModel.description"></textarea>
+          <label for="form2">Description</label>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-center">
+        <a type="button" mdbBtn color="info" [outline]="true" class="waves-effect" (click)="createOrUpdate()" mdbWavesEffect>
+          <mdb-icon far icon="plus-square" class="mr-1"></mdb-icon>
+          {{task ? 'UPDATE' : 'ADD'}}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

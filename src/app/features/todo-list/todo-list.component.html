@@ -1,0 +1,62 @@
+<ng-container *ngIf="tasksPage && tasksPage.content && tasksPage.content.length > 0">
+    <div class="d-flex flex-column px-5">
+        <div
+            class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-3 col-12 col-md-8 mx-auto">
+            <span class="fw-bold mb-2 mb-md-0">{{tasksPage.totalElements}} items found</span>
+            <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" screenReaderPageLabel="page"
+                screenReaderCurrentLabel="You're on page" previousLabel="Prev" nextLabel="Next"></pagination-controls>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <mdb-card class="col-md-3 m-2 col-sm-6 col-12 px-0"
+                *ngFor="let task of tasksPage.content | paginate: { itemsPerPage: rowCount, currentPage: tasksPage.number, totalItems: tasksPage.totalElements }">
+                <mdb-card-body>
+                    <mdb-card-title class="d-flex justify-content-between align-items-baseline">
+                        <h4 class="pr-4">
+                            <ng-container *ngTemplateOutlet="displayText; context: {strike:task.done, text:task.name}">
+                            </ng-container>
+                        </h4>
+                        <input mdbCheckbox class="form-check-input position-relative" type="checkbox"
+                            [checked]="task.done" (change)="updateState(task, $event)" aria-label="..." />
+                    </mdb-card-title>
+                    <mdb-card-text>
+                        <ng-container
+                            *ngTemplateOutlet="displayText; context: {strike:task.done, text:task.description}">
+                        </ng-container>
+                    </mdb-card-text>
+                </mdb-card-body>
+                <mdb-card-footer class="d-flex justify-content-end mx-0">
+                    <button class="btn btn-primary mr-2" (click)="update(task)">
+                        <mdb-icon fas icon="pen" class="white-text"></mdb-icon>
+                    </button>
+                    <button class="btn btn-danger" (click)="delete(task)">
+                        <mdb-icon far icon="trash-alt" class="white-text"></mdb-icon>
+                    </button>
+                </mdb-card-footer>
+            </mdb-card>
+        </div>
+
+        <div class="align-self-center mt-3">
+            <pagination-controls (pageChange)="pageChanged($event)" [responsive]="true" screenReaderPageLabel="page"
+                screenReaderCurrentLabel="You're on page" previousLabel="Prev" nextLabel="Next"></pagination-controls>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="!tasksPage || !tasksPage.content || tasksPage.content.length === 0">
+    <div class="d-flex h-100 align-items-center align-self-center justify-content-center">
+        <h1>No task found !</h1>
+    </div>
+</ng-container>
+
+<a class="add-button indigo text-white" (click)="addTask()" mdbWavesEffect>
+    <mdb-icon fas icon="plus" size="2x"
+        class="white-text d-flex align-items-center justify-content-center link-linkedin"></mdb-icon>
+</a>
+
+<ng-template #displayText let-strike="strike" let-text="text">
+    <del *ngIf="strike">{{text}}</del>
+    <ng-container *ngIf="!strike">{{text}}</ng-container>
+</ng-template>
+
+<app-save-or-update-task-popup [(display)]="displayPopup" [task]="taskToUpdate" (onClose)="taskToUpdate = undefined"
+    (onSuccess)="reloadTasks()"></app-save-or-update-task-popup>

@@ -1,0 +1,30 @@
+:host {
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+    & .fab {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        transition: all 0.1s ease-in-out;
+        text-align: center;
+      
+        &:hover  {
+            transform: scale(1.1);
+        }
+    }
+
+    & .link-linkedin {
+        background-color: #0082ca !important;
+    }
+
+    & .link-npm {
+        background-color: #cb3837 !important;
+    }
+
+    & .link-github {
+        background-color: #333 !important;
+    }
+}

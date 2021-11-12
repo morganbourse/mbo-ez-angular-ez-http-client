@@ -1,0 +1,24 @@
+<div class="w-100 d-flex flex-column indigo">
+    <mdb-navbar SideClass="navbar justify-content-center navbar-expand-sm navbar-dark indigo px-5 fixed-top shadow" [containerInside]="false">
+        <mdb-navbar-brand>
+            <a class="navbar-brand" href="#">mbo-ez-angular</a>
+        </mdb-navbar-brand>
+        <links class="d-flex justify-content-end">
+            <a class="d-flex flex-row justify-content-center align-items-center text-white fw-bold p-2 link-github" target="_blank">
+                <mdb-icon fab icon="github" size="2x" class="white-text d-flex align-items-center justify-content-center mr-1"></mdb-icon>
+                <span>GitHub</span>
+            </a>
+        </links>
+    </mdb-navbar>
+    
+    <header class="p-3 d-flex flex-column align-items-center">
+        <div class="text-white d-flex flex-column justify-content-center mb-4">
+            <div class="d-flex flex-row align-items-baseline align-self-center mb-2">
+                <mdb-icon fas icon="tasks" size="2x" class="mr-2"></mdb-icon>
+                <h1>TODO LIST</h1>
+            </div>
+            <small>Made with <span class="fw-bold">@mbo-ez-angular/ez-http-client</span> library</small>
+        </div>
+        <app-task-search></app-task-search>
+    </header>
+</div>

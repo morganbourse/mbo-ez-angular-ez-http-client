@@ -1,0 +1,17 @@
+:host {
+    width: 100%;
+}
+
+::ng-deep .navbar-toggler {
+    display: none !important;
+}
+
+.link-github {
+    &:hover {
+        background-color: rgba(0,0,0,.4) !important;
+    }
+}
+
+header {
+    margin-top: 4rem;
+}
