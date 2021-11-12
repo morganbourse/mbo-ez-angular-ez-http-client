@@ -45,7 +45,17 @@ npm install @mbo-ez-angular/ez-http-client
 
 ## Setup
 
-Include `HttpClientModule` into your app module or another module where you declare your services.
+1. Include `HttpClientModule` into your app module or another module where you declare your services.
+2. Update your `tsconfig.json` file to add or update these properties :
+   ```json
+   "compilerOptions": {
+      [...],
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      [...]
+   }
+   ```
+
 
 ## Usage
 
@@ -255,5 +265,3 @@ npm install
 ```bash
 npm run start
 ```
-
-See result into the developper console
