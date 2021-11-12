@@ -1,6 +1,10 @@
 {
   "name": "@mbo-ez-angular/ez-http-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "author": "Morgan BOURSE",
+  "description": "An ez angular http client inspired by Java OpenFeign Client",
+  "license": "The Unlicense",
+  "repository": "https://github.com/morganbourse/mbo-ez-angular-ez-http-client",
   "peerDependencies": {
     "@angular/common": ">=9.0.0",
     "@angular/core": ">=9.0.0",
