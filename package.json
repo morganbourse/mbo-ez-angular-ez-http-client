@@ -8,7 +8,8 @@
     "build": "ng build ez-http-client-lib",
     "watch": "ng build --watch --configuration development",
     "test": "echo \"No test specified\"",
-    "lint": "eslint \"**/*.{ts,tsx}\""
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "publish": "npm run build && cd ./dist/ez-http-client-lib && npm publish --access public"
   },
   "private": true,
   "dependencies": {

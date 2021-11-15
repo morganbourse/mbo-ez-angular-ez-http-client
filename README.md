@@ -3,7 +3,7 @@
 <h1>ez-http-client</h1>
 
 <br>
-<img  src="https://img.shields.io/badge/angular-%3E%3D%209.0.0-brightgreen" alt="angular">
+<img  src="https://img.shields.io/badge/angular-%3E%3D%2012.0.0-brightgreen" alt="angular">
 <br>
 
 </div>
@@ -39,8 +39,8 @@ npm install @mbo-ez-angular/ez-http-client
 
 ## Peer dependencies
 
-* @angular/common: >=9.0.0
-* @angular/core: >=9.0.0
+* @angular/common: >=12.0.0
+* @angular/core: >=12.0.0
 * rxjs: >=6.0.0
 
 ## Setup
