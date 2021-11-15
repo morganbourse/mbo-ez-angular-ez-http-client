@@ -12,22 +12,22 @@
 
 - [Features](#features)
 - [Install](#install)
-- [Peer dependancies](#peer-dependancies)
+- [Peer dependencies](#peer-dependencies)
 - [Setup](#setup)
 - [Usage](#usage)
   - [Service declaration](#service-declaration)
   - [Declare default http headers for any request](#declare-default-http-headers-for-any-request)
   - [Declare global response operators](#declare-global-response-operators)
   - [Endpoint call declaration](#endpoint-call-declaration)
-  - [Declare an request parameter](#declare-an-request-parameter)
-  - [Declare an query parameter](#declare-an-query-parameter)
-  - [Declare an request body](#declare-an-request-body)
+  - [Declare a request parameter](#declare-a-request-parameter)
+  - [Declare a query parameter](#declare-a-query-parameter)
+  - [Declare a request body](#declare-a-request-body)
   - [Map the result observable into method parameter](#map-the-result-observable-into-method-parameter)
 - [Demo](#demo)
 
 ## Features
 
-- Allow to define http calls only with decorators (inspired by openfeign)
+- Allow to define http calls only with decorators (inspired by [OpenFeign](https://github.com/OpenFeign/feign))
 
 ## Install
 
@@ -37,7 +37,7 @@ Install the dependency
 npm install @mbo-ez-angular/ez-http-client
 ```
 
-## Peer dependancies
+## Peer dependencies
 
 * @angular/common: >=9.0.0
 * @angular/core: >=9.0.0
@@ -61,12 +61,12 @@ npm install @mbo-ez-angular/ez-http-client
 
 ### Service declaration
 
-To declare the EzHttpClient service, decorate your service with only with `@EzHttpClient`.
+To declare the EzHttpClient service, you only have to decorate your service with `@EzHttpClient`.
 
-This decorator take two optional parameters (marked with `?` are optionnal) :
+This decorator take two optional parameters (the ones marked with `?` are optional) :
 
-* apiPath?: string - Represents the base api path (e.g '/api/clients').
-* module?: Type<any> - Represents the module where to include this service (like Injectable decorator). By default 'root'.
+* `apiPath?: string` - Represents the base api path (e.g '/api/clients').
+* `module?: Type<any>` - Represents the module where to include this service (like Injectable decorator). By default 'root'.
 
 This decorator is mandatory and mark the service as an ezHttpClient service.
 
@@ -98,11 +98,11 @@ export class ClientsService {
 
 ### Declare global response operators
 
-You can declare global commons reponse operators executed on the observable when response is received with the class decorator `EzHttpClientCommonResponseOperators`.
+You can declare global commons response operators executed on the observable when response is received with the class decorator `EzHttpClientCommonResponseOperators`.
 
-This decorator take `options` :
-* operators: Array<OperatorFunction<any, any>> - The response operators executed into the same order as declared array
-* before?: boolean - indicate to place these operators at first executed operators or after declared request operators
+This decorator takes options :
+* `operators: Array<OperatorFunction<any, any>>` - The response operators executed into the same order as declared array
+* `before?: boolean` - indicates to place these operators at first executed operators or after declared request operators
 
 Example:
 
@@ -135,12 +135,12 @@ export class ClientsService {
     }
 }
 ```
-In this example, when the method `getClients()` is called, on response, operators has been executed in this order :
+In this example, when the method `getClients()` is called, on response, operators have been executed in this order :
 1) Print "Http request executed !!" into the console
 2) Print the raw value into the console
 3) Map returned value to string as "Hello John DOE !, Hello John SNOW !" for example.
 
-If `before` parameter into options is equals to false or undefined then the action number 1 become the last .
+If `before` parameter into options is equal to `false` or `undefined` then the action number 1 becomes the last .
 
 *Note: The order of the decorators is not important*
 
@@ -158,15 +158,15 @@ Alias are define for each http methods :
 * `@EzHttpRequestPUT`
 
 These decorators can take some parameters :
-* httpMethod: EzHttpMethod - Indicate the http method to use (only for vanilla `@EzHttpRequest` decorator)
-* options: EzHttpRequestOptions
-  * path?: string - The request path
-  * consume?: string - The request content-type
-  * headers?: {[header: string]: string | string[]} - List of request headers
-  * responseType?: 'blob' | 'text' | 'json' | 'arraybuffer' - The response type
-  * responseOperators?: EzHttpReponseOperatorsOptions - The response operators executed into the same order as declared array
-    * operators: Array<OperatorFunction<any, any>> - The response operators executed into the same order as declared array
-    * skipGlobalCommonsOperators?: boolean - Indicate if declared global commons operators are ignored or merged to this operators
+* `httpMethod: EzHttpMethod` - Indicate the http method to use (only for vanilla `@EzHttpRequest` decorator)
+* `options: EzHttpRequestOptions`
+  * `path?: string` - The request path
+  * `consume?: string` - The request content-type
+  * `headers?: {[header: string]: string | string[]}` - List of request headers
+  * `responseType?: 'blob' | 'text' | 'json' | 'arraybuffer'` - The response type
+  * `responseOperators?: EzHttpReponseOperatorsOptions` - The response operators executed into the same order as declared array
+    * `operators: Array<OperatorFunction<any, any>>` - The response operators executed into the same order as declared array
+    * `skipGlobalCommonsOperators?: boolean` - Indicates if declared global commons operators are ignored or merged with these operators
 
 Example :
 ```ts
@@ -189,13 +189,13 @@ export class ClientsService {
 }
 ```
 
-### Declare an request parameter
+### Declare a request parameter
 
-Http request paramters are parameters declared into the api path like /clients/{uid} for example.
-{uid} is the request parameter.
+Http request parameters are parameters declared into the api path like `/clients/{uid}` for example.
+`{uid}` is the request parameter.
 
 To declare the request parameter, use the `@EzHttpRequestParam`.
-This decorator take the name of the parameter in argument (here `uid`).
+This decorator takes the name of the parameter in argument (here `uid`).
 
 Example :
 ```ts
@@ -210,12 +210,12 @@ export class ClientsService {
 }
 ```
 
-### Declare an query parameter
+### Declare a query parameter
 
-Query parameters are url paraters declared like ?param1=value1&param2=value2
+Query parameters are url parameters declared like `?param1=value1&param2=value2`
 
-To declare query parameter use decorator `@EzHttpQueryParam`.
-This decorator take the name of the parameter in argument (here `param1` for example).
+To declare query parameter use the decorator `@EzHttpQueryParam`.
+This decorator takes the name of the parameter in argument (here `param1` for example).
 
 Example :
 ```ts
@@ -225,7 +225,7 @@ public getSortedClients(@EzHttpQueryParam('sort_dir') direction: 'asc' | 'desc')
 }
 ```
 
-### Declare an request body
+### Declare a request body
 
 To make PATCH, POST, PUT http calls you can pass http request body with `@EzHttpRequestBody` decorator.
 
@@ -239,7 +239,7 @@ public addClient(@EzHttpRequestBody client: {firstname: string, lastname: string
 
 ### Map the result observable into method parameter
 
-If you want to do something with http call result, you can map the result observable into method parameter with `@EzHttpResponse` decorator.
+If you want to do something with the http call result, you can map the result observable into method parameter with `@EzHttpResponse` decorator.
 
 Example (transform observable to promise or make some pipes if you dont want to use ezHttpRequest declarative responseOperators for example...) :
 ```ts
