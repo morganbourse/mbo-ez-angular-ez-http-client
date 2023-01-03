@@ -48,15 +48,22 @@
     </div>
 </ng-container>
 
-<a class="add-button indigo text-white" (click)="addTask()" mdbWavesEffect>
-    <mdb-icon fas icon="plus" size="2x"
-        class="white-text d-flex align-items-center justify-content-center link-linkedin"></mdb-icon>
-</a>
+<div class="fabs d-flex flex-column">
+    <a class="indigo text-white mb-2" (click)="importTasks()" title="Import tasks json file" mdbWavesEffect>
+        <mdb-icon fas icon="file-upload" class="white-text d-flex align-items-center justify-content-center"></mdb-icon>
+    </a>
+
+    <a class="green text-white" (click)="addTask()" title="Add task" mdbWavesEffect>
+        <mdb-icon fas icon="plus" class="white-text d-flex align-items-center justify-content-center"></mdb-icon>
+    </a>
+</div>
 
 <ng-template #displayText let-strike="strike" let-text="text">
     <del *ngIf="strike">{{text}}</del>
     <ng-container *ngIf="!strike">{{text}}</ng-container>
 </ng-template>
 
-<app-save-or-update-task-popup [(display)]="displayPopup" [task]="taskToUpdate" (onClose)="taskToUpdate = undefined"
-    (onSuccess)="reloadTasks()"></app-save-or-update-task-popup>
+<save-or-update-task-popup [(display)]="displayPopup" [task]="taskToUpdate" (onClose)="taskToUpdate = undefined"
+    (onSuccess)="reloadTasks()"></save-or-update-task-popup>
+
+<import-tasks-popup [(display)]="displayImportTasksPopup" (onSuccess)="reloadTasks()"></import-tasks-popup>

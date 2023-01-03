@@ -1,4 +1,4 @@
-import { EzHttpClient, EzHttpClientCommonResponseOperators, EzHttpClientHeaders, EzHttpQueryParam, EzHttpRequestBody, EzHttpRequestDELETE, EzHttpRequestGET, EzHttpRequestParam, EzHttpRequestPOST, EzHttpRequestPUT, EzHttpResponse } from "ez-http-client-lib";
+import { EzHttpClient, EzHttpClientCommonResponseOperators, EzHttpClientHeaders, EzHttpQueryParam, EzHttpPartFile, EzHttpRequestBody, EzHttpRequestDELETE, EzHttpRequestGET, EzHttpRequestParam, EzHttpRequestPOST, EzHttpRequestPUT, EzHttpResponse } from "ez-http-client-lib";
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { CoreModule } from "../core.module";
@@ -54,6 +54,13 @@ export class TaskService {
 
     @EzHttpRequestPOST()
     public addTask(@EzHttpRequestBody partialTask: PartialTask, @EzHttpResponse response?: Observable<Task>): Promise<Task> {
+        return response!.toPromise();
+    }
+
+    @EzHttpRequestPOST({
+        path: '/import'
+    })
+    public importTasks(@EzHttpPartFile('file') file: File, @EzHttpResponse response?: Observable<Array<Task>>): Promise<Array<Task>> {
         return response!.toPromise();
     }
 }

@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ModalDirective } from 'angular-bootstrap-md';
 import { Subscription } from 'rxjs';
-import { PartialTask } from 'src/app/core/models/tasks/partial-task.model';
 import { Task } from 'src/app/core/models/tasks/task.model';
 import { TaskService } from 'src/app/core/services/task.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
-  selector: 'save-or-update-task-popup',
-  templateUrl: './save-or-update-task-popup.component.html',
-  styleUrls: ['./save-or-update-task-popup.component.scss']
+  selector: 'import-tasks-popup',
+  templateUrl: './import-tasks-popup.component.html',
+  styleUrls: ['./import-tasks-popup.component.scss']
 })
-export class SaveOrUpdateTaskPopupComponent implements OnChanges, OnDestroy {
+export class ImportTasksPopupComponent implements OnChanges, OnDestroy {
   @ViewChild(ModalDirective) 
   private modal: ModalDirective | undefined;
 
@@ -25,15 +25,14 @@ export class SaveOrUpdateTaskPopupComponent implements OnChanges, OnDestroy {
   @Output()
   onClose: EventEmitter<any>;
 
-  @Input()
-  task?: Task;
-
   @Output()
-  onSuccess: EventEmitter<Task>;
+  onSuccess: EventEmitter<Array<Task>>;
 
-  taskModel!: PartialTask;
+  file!: File;
 
-  constructor(private taskService: TaskService) {
+  displayFileRequired = false;
+
+  constructor(private taskService: TaskService, private notifyService: ToastService) {
     this.displayChange = new EventEmitter();
     this.onClose = new EventEmitter();
     this.onSuccess = new EventEmitter();
@@ -49,18 +48,17 @@ export class SaveOrUpdateTaskPopupComponent implements OnChanges, OnDestroy {
     } else {
       this.modal?.hide();
     }
-
-    if (changes.task && changes.task.currentValue) {
-      this.taskModel = {name: changes.task.currentValue.name, description: changes.task.currentValue.description};
-    } else {
-      this.taskModel = {name: '', description: ''};
-    }
   }
 
   ngOnDestroy(): void {
     if (this.onHiddenSubscription && !this.onHiddenSubscription.closed) {
       this.onHiddenSubscription.unsubscribe();
     }
+  }
+
+  onFileSelected(event: any): void {
+    this.file = event.target.files ? event.target.files[0] : undefined;
+    this.displayFileRequired = !this.file;
   }
 
   /**
@@ -72,19 +70,21 @@ export class SaveOrUpdateTaskPopupComponent implements OnChanges, OnDestroy {
   }
 
   /**
-   * Create or update a task
+   * Import tasks
    */
-  createOrUpdate(): void {
-    let promise: Promise<Task>;
-    if (this.task) {
-      promise = this.taskService.updateTask(this.task.id, this.taskModel!);
-    } else {
-      promise = this.taskService.addTask(this.taskModel!);
+  import(): void {
+    this.displayFileRequired = !this.file;
+    if (this.displayFileRequired) {
+      return;
     }
 
-    promise.then((updatedTask: Task) => {
-      this.onSuccess.emit(updatedTask);
+    this.taskService.importTasks(this.file).then((tasks) => {
+      this.onSuccess.emit(tasks);
       this.close();
+      this.notifyService.success(`${tasks.length} tasks imported successfully !`);
+    }).catch((e) => {
+      this.notifyService.error('An error has occured pending tasks import...');
+      console.error(e);
     });
   }
 }

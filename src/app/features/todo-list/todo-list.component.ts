@@ -21,6 +21,7 @@ export class TodoListComponent implements OnInit {
   rowCount = 10;
   search: Search | undefined;
   displayPopup = false;
+  displayImportTasksPopup = false;
   taskToUpdate?: Task;
 
   constructor(private todoListService: TaskService, private taskSearchNotifyService: TaskSearchNotifyService, private notifyService: ToastService) { }
@@ -62,6 +63,10 @@ export class TodoListComponent implements OnInit {
   public addTask(): void {
     this.taskToUpdate = undefined;
     this.displayPopup = true;
+  }
+
+  public importTasks(): void {
+    this.displayImportTasksPopup = true;
   }
 
   public delete(task: Task): void {

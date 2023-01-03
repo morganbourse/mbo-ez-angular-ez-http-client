@@ -7,11 +7,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from '../app-routing.module';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { SaveOrUpdateTaskPopupComponent } from './todo-list/save-or-update-task-popup/save-or-update-task-popup.component';
+import { ImportTasksPopupComponent } from './todo-list/import-tasks-popup/import-tasks-popup.component';
 
 @NgModule({
   declarations: [
       TodoListComponent,
-      SaveOrUpdateTaskPopupComponent
+      SaveOrUpdateTaskPopupComponent,
+      ImportTasksPopupComponent
   ],
   imports: [
     CommonModule,

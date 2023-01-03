@@ -8,6 +8,8 @@ import { EzHttpRequestMethod } from './models/ez-http-request-method.enum';
 import { EzHttpRequestOptions } from './models/ez-http-request-options.model';
 import { EzHttpParameterDescriptor } from './models/ez-http-parameter-descriptor.model';
 import { EzHttpReponseOperatorsOptions } from './models/ez-http-client-response-oeprators-options.model';
+import { EZ_REQUEST_PART_DATA_META_KEY } from './ez-http-part-data.decorator';
+import { EZ_REQUEST_PART_FILE_META_KEY } from './ez-http-part-file.decorator';
 
 /**
  * Http call options
@@ -153,11 +155,7 @@ function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<Ez
     if (options.headers || options.consume) {
         httpOptions.headers = options.headers || {};
         if (options.consume && options.consume.length > 0) {
-            for (const key in httpOptions.headers) {
-                if (key.toLowerCase() === 'content-type') {
-                    delete httpOptions.headers[key];
-                }
-            }
+            stripContentType(httpOptions);
             httpOptions.headers['Content-Type'] = options.consume;
         }
     }
@@ -179,6 +177,23 @@ function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<Ez
     }
 
     return httpOptions;
+}
+
+/**
+ * Remove content-type header
+ *
+ * @param httpOptions The http options
+ */
+function stripContentType(httpOptions: HttpOptions): void {
+    if (!httpOptions) {
+        return;
+    }
+
+    for (const key in httpOptions.headers) {
+        if (key.toLowerCase() === 'content-type') {
+            delete httpOptions.headers[key];
+        }
+    }
 }
 
 /**
@@ -264,7 +279,10 @@ function apply(target: any,
     const ezQueryParams: Array<EzHttpParameterDescriptor> =
         Reflect.getOwnMetadata(EZ_REQUEST_QUERY_PARAMS_META_KEY, target, key.toString()) || [];
     const ezBody: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_REQUEST_BODY_META_KEY, target, key.toString());
+    const ezPartDatas: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_REQUEST_PART_DATA_META_KEY, target, key.toString()) || [];
+    const ezPartFiles: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_REQUEST_PART_FILE_META_KEY, target, key.toString()) || [];
     const ezResponseMapper: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_RESPONSE_META_KEY, target, key.toString());
+
     const originalMethod: (...args: any[]) => Promise<any> = descriptor.value;
     descriptor.value = (...args: any[]) => {
         // try to get http client instance
@@ -274,9 +292,15 @@ function apply(target: any,
         }
 
         const url: string = resolveUrl(target, hasParameters, ezRequestParams, options!, args);
-        const httpOptions: HttpOptions = buildHttpOptions(options!, ezQueryParams, args, target);
 
-        const body: any = (ezBody && ezBody.length > 0) ? args[ezBody[0].index] : {};
+        const httpOptions: HttpOptions = buildHttpOptions(options!, ezQueryParams, args, target);
+        const body: any = ezBody?.length ? args[ezBody[0].index] : {};
+        const multiPartFormData: FormData = buildMultipartFormData(args, ezPartDatas, ezPartFiles, body);
+
+        if (!!multiPartFormData) {
+            stripContentType(httpOptions);
+            console.log(httpOptions);
+        }
 
         const commonOperatorsOptions: EzHttpReponseOperatorsOptions = target.constructor.EZ_HTTP_CLIENT_COMMON_RESPONSE_OPERATORS;
         if (!options!.responseOperators) {
@@ -298,7 +322,7 @@ function apply(target: any,
             operators.push(...options!.responseOperators.operators);
         }
 
-        const response: Observable<any> = doCall(httpClient, url, httpMethod, httpOptions, body, operators);
+        const response: Observable<any> = doCall(httpClient, url, httpMethod, httpOptions, !!multiPartFormData ? multiPartFormData : body, operators);
 
         if (ezResponseMapper && ezResponseMapper.length > 0) {
             args[ezResponseMapper[0].index] = response;
@@ -307,4 +331,56 @@ function apply(target: any,
         return response;
     };
     return descriptor;
+}
+
+/**
+ * Build multipart form data if necessary
+ *
+ * @param args Method args
+ * @param ezPartDatas Part data descriptor array
+ * @param ezPartFiles Part file descriptor array
+ * @param body Request body
+ * @returns FormData or undefined
+ */
+function buildMultipartFormData(args: Array<any>, ezPartDatas: Array<EzHttpParameterDescriptor>, ezPartFiles: Array<EzHttpParameterDescriptor>, body?: any): FormData {
+    const buildFormData: boolean = (ezPartDatas && !!ezPartDatas.length) || (ezPartFiles && !!ezPartFiles.length);
+    if (buildFormData) {
+        const formData = new FormData();
+        (ezPartDatas || []).forEach(data => {
+            const value: any = args[data.index];
+
+            // if type of value is not string then build blob otherwise push as is
+            if (typeof value === 'string') {
+                formData.append(data.paramName, value);
+            } else {
+                formData.append(data.paramName, new Blob([JSON.stringify(value)], {
+                    type: "application/json"
+                }));
+            }
+        });
+
+        (ezPartFiles || []).forEach(data => {
+            const value: any = args[data.index];
+
+            // if type of value is not File or Blob then ignore
+            if (value instanceof File || value instanceof Blob) {
+                formData.append(data.paramName, value);
+            }
+        });
+
+        if (!!body && Object.keys(body).length > 0) {
+            // if type of body is not string then build blob otherwise push as is
+            if (typeof body === 'string') {
+                formData.append('body', body);
+            } else {
+                formData.append('body', new Blob([JSON.stringify(body)], {
+                    type: "application/json"
+                }));
+            }
+        }
+
+        return formData;
+    }
+
+    return undefined!;
 }

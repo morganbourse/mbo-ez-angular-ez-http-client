@@ -1,4 +1,6 @@
 const express = require('express');
+const multer  = require('multer');
+const upload = multer();
 const app = express();
 
 //Here we are configuring express to use body-parser as middle-ware.
@@ -192,6 +194,21 @@ app.post('/api/tasks', (req, res) => {
     res.status(201).json(task);
 });
 
+app.post('/api/tasks/import', upload.single('file'), (req, res) => {
+    const importJson = JSON.parse(req.file.buffer.toString('utf-8'));
+    if (!!importJson && Array.isArray(importJson)) {
+        const start = TASKS.length;
+        for (let i = 0; i < importJson.length; i++) {
+            importJson[i].id = start + i;
+        }
+
+        TASKS.push(...importJson);
+        res.status(201).json(importJson);
+    } else {
+        res.status(400).json({ errorCode: 'INVALID_TASKS_IMPORT_FILE' });
+    }
+});
+
 app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`)
+    console.log(`Server listening at http://localhost:${port}`);
 });

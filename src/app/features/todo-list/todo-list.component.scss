@@ -16,22 +16,25 @@
     padding-left: 0 !important;
 }
 
-.add-button {
+.fabs {
     bottom: 4%;
     right: 2%;
     position: sticky;
     float: right;
-    text-decoration: none;
-    border-radius: 50%;
-    transition: all 0.1s ease-in-out;
-    text-align: center;
 
-    & .fab, .fas, .far {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-
-    &:hover  {
-        transform: scale(1.1);
+    & a {
+        text-decoration: none;
+        border-radius: 50%;
+        transition: all 0.1s ease-in-out;
+        text-align: center;
+    
+        & .fab, .fas, .far {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+    
+        &:hover  {
+            transform: scale(1.1);
+        }
     }
 }
