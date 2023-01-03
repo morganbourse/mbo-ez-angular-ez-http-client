@@ -1,6 +1,6 @@
 {
   "name": "@mbo-ez-angular/ez-http-client",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "author": "Morgan BOURSE",
   "description": "An ez angular http client inspired by Java OpenFeign Client",
   "license": "The Unlicense",
