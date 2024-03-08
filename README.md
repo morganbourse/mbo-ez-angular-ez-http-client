@@ -3,8 +3,8 @@
 <h1>ez-http-client</h1>
 
 <br>
-<img  src="https://img.shields.io/badge/angular-%3E%3D%2012.0.0-brightgreen" alt="angular 14">
-<img  src="https://img.shields.io/badge/angular-15.x-brightgreen" alt="angular 17">
+<img  src="https://img.shields.io/badge/angular-%3E%3D%2014.0.0-brightgreen" alt="angular 14">
+<img  src="https://img.shields.io/badge/angular-17.x-brightgreen" alt="angular 17">
 <br>
 
 </div>
