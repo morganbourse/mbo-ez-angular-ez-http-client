@@ -81,19 +81,19 @@
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
-						"production": {
-							"browserTarget": "ez-http-client:build:production"
+            "production": {
+              "buildTarget": "ez-http-client:build:production"
 						},
-						"development": {
-							"browserTarget": "ez-http-client:build:development"
+            "development": {
+              "buildTarget": "ez-http-client:build:development"
 						}
 					},
 					"defaultConfiguration": "development"
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
-					"options": {
-						"browserTarget": "ez-http-client:build"
+          "options": {
+            "buildTarget": "ez-http-client:build"
 					}
 				},
 				"test": {
