@@ -3,7 +3,7 @@ import { EzHttpParameterDescriptor } from './models/ez-http-parameter-descriptor
 
 export const EZ_RESPONSE_META_KEY = `EzHttpResponse`;
 
-export function EzHttpResponse(target: Object, methodName: string | symbol, parameterIndex: number): void {
+export function EzHttpResponse(target: object, methodName: string | symbol, parameterIndex: number): void {
     const requestParameters: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_RESPONSE_META_KEY, target, methodName) || [];
     if (requestParameters.length >= 1) {
         throw new Error('Only response mapping parameter can be defined !');

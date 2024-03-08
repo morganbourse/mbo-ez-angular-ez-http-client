@@ -3,7 +3,7 @@ import { EzHttpParameterDescriptor } from './models/ez-http-parameter-descriptor
 
 export const EZ_REQUEST_BODY_META_KEY = `EzHttpRequestBody`;
 
-export function EzHttpRequestBody(target: Object, methodName: string | symbol, parameterIndex: number): void {
+export function EzHttpRequestBody(target: object, methodName: string | symbol, parameterIndex: number): void {
     const requestParameters: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_REQUEST_BODY_META_KEY, target, methodName) || [];
     if (requestParameters.length >= 1) {
         throw new Error('Only one body can be defined !');

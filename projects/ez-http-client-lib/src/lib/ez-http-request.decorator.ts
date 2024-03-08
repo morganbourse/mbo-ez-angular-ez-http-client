@@ -170,7 +170,7 @@ function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<Ez
         ezQueryParams.forEach(paramDescriptor => {
             const paramValue: any = args[paramDescriptor.index];
             if (paramValue) {
-                // @ts-ignore: Object is possibly 'null'.
+                // @ts-ignore: object is possibly 'null'.
                 httpOptions.params[paramDescriptor.paramName] = paramValue;
             }
         });

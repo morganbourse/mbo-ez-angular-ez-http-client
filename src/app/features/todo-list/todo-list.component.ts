@@ -111,7 +111,7 @@ export class TodoListComponent implements OnInit {
           this.reloadTasks();
         }
       }
-    });;
+    });
   }
 
   private displayImportPopup(): void {
