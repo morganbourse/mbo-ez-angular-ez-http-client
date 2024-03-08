@@ -6,6 +6,9 @@ import { TaskService } from 'src/app/core/services/task.service';
 import { TaskSearchNotifyService } from 'src/app/core/layout/header/task-search/services/task-search-notifier.service';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { Search } from 'src/app/core/layout/header/task-search/models/search.model';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { SaveOrUpdateTaskPopupComponent } from './save-or-update-task-popup/save-or-update-task-popup.component';
+import { ImportTasksPopupComponent } from './import-tasks-popup/import-tasks-popup.component';
 
 @Component({
   selector: 'app-todo-list',
@@ -20,11 +23,14 @@ export class TodoListComponent implements OnInit {
   page = 1;
   rowCount = 10;
   search: Search | undefined;
-  displayPopup = false;
-  displayImportTasksPopup = false;
   taskToUpdate?: Task;
 
-  constructor(private todoListService: TaskService, private taskSearchNotifyService: TaskSearchNotifyService, private notifyService: ToastService) { }
+  constructor(
+    private todoListService: TaskService,
+    private taskSearchNotifyService: TaskSearchNotifyService,
+    private notifyService: ToastService,
+    private modalService: MdbModalService
+  ) { }
 
   public ngOnInit(): void {
     this.searchSubscription = this.taskSearchNotifyService.subscribe(search => {
@@ -57,16 +63,16 @@ export class TodoListComponent implements OnInit {
   public update(task: Task): void {
     console.log(`Update task ${task.id}...`);
     this.taskToUpdate = task;
-    this.displayPopup = true;
+    this.displayAddOrUpdatePopup();
   }
 
   public addTask(): void {
     this.taskToUpdate = undefined;
-    this.displayPopup = true;
+    this.displayAddOrUpdatePopup();
   }
 
   public importTasks(): void {
-    this.displayImportTasksPopup = true;
+    this.displayImportPopup();
   }
 
   public delete(task: Task): void {
@@ -90,6 +96,34 @@ export class TodoListComponent implements OnInit {
     const searchState: string = (this.search) ? this.search.state : 'ALL';
     this.todoListService.getTasks(this.sort, this.page, this.rowCount, searchText, searchState).then((page: Page<Task>) => {
       this.tasksPage = page;
+    });
+  }
+
+  private displayAddOrUpdatePopup(): void {
+    this.modalService.open(SaveOrUpdateTaskPopupComponent, {
+      modalClass: 'modal-dialog-centered',
+      data: {
+        task: this.taskToUpdate
+      }
+    }).onClose.subscribe({
+      next: (tasks) => {
+        if (!!tasks?.length) {
+          this.reloadTasks();
+        }
+      }
+    });;
+  }
+
+  private displayImportPopup(): void {
+    this.modalService.open(ImportTasksPopupComponent, {
+      modalClass: 'modal-dialog-centered'
+    }).onClose.subscribe({
+      next: (task) => {
+        this.taskToUpdate = undefined;
+        if (!!task) {
+          this.reloadTasks();
+        }
+      }
     });
   }
 }

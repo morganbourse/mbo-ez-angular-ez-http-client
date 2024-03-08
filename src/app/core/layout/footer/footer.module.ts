@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { FooterComponent } from './footer.component';
 
 @NgModule({
@@ -12,8 +11,7 @@ import { FooterComponent } from './footer.component';
   imports: [
     CommonModule,
     BrowserModule,
-    BrowserAnimationsModule,
-    MDBBootstrapModule
+    BrowserAnimationsModule
   ],
   exports: [FooterComponent]
 })

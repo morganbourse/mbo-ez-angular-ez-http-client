@@ -36,8 +36,8 @@
 							"node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
 							"node_modules/bootstrap/dist/css/bootstrap.min.css",
 							"node_modules/animate.css/animate.css",
-							"node_modules/angular-bootstrap-md/assets/scss/mdb.scss",
-							"node_modules/angular-bootstrap-md/assets/scss/bootstrap/bootstrap.scss",
+							"node_modules/mdb-angular-ui-kit/assets/scss/mdb.scss",
+							"node_modules/mdb-angular-ui-kit/assets/scss/bootstrap/bootstrap.scss",
 							"node_modules/ngx-toastr/toastr.css",
 							"src/styles.scss"
 						],

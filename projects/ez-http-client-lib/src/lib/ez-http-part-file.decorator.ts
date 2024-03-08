@@ -4,7 +4,7 @@ import { EzHttpParameterDescriptor } from './models/ez-http-parameter-descriptor
 export const EZ_REQUEST_PART_FILE_META_KEY = `EzHttpPartFile`;
 
 export function EzHttpPartFile(paramName: string): any {
-    return function (target: Record<string, unknown>, methodName: string | symbol, parameterIndex: number) {
+    return function (target: Object, methodName: string | symbol, parameterIndex: number) {
         const requestParameters: Array<EzHttpParameterDescriptor> =
             Reflect.getOwnMetadata(EZ_REQUEST_PART_FILE_META_KEY, target, methodName) || [];
         requestParameters.push({ index: parameterIndex, paramName });

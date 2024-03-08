@@ -8,32 +8,32 @@
         </div>
 
         <div class="row d-flex justify-content-center">
-            <mdb-card class="col-md-3 m-2 col-sm-6 col-12 px-0"
+            <div class="card col-md-3 m-2 col-sm-6 col-12 px-0"
                 *ngFor="let task of tasksPage.content | paginate: { itemsPerPage: rowCount, currentPage: tasksPage.number, totalItems: tasksPage.totalElements }">
-                <mdb-card-body>
-                    <mdb-card-title class="d-flex justify-content-between align-items-baseline">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between align-items-baseline">
                         <h4 class="pr-4">
                             <ng-container *ngTemplateOutlet="displayText; context: {strike:task.done, text:task.name}">
                             </ng-container>
                         </h4>
-                        <input mdbCheckbox class="form-check-input position-relative" type="checkbox"
+                        <input mdbCheckbox class="position-relative" type="checkbox"
                             [checked]="task.done" (change)="updateState(task, $event)" aria-label="..." />
-                    </mdb-card-title>
-                    <mdb-card-text>
+                    </div>
+                    <div class="card-text">
                         <ng-container
                             *ngTemplateOutlet="displayText; context: {strike:task.done, text:task.description}">
                         </ng-container>
-                    </mdb-card-text>
-                </mdb-card-body>
-                <mdb-card-footer class="d-flex justify-content-end mx-0">
-                    <button class="btn btn-primary mr-2" (click)="update(task)">
-                        <mdb-icon fas icon="pen" class="white-text"></mdb-icon>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end mx-0">
+                    <button class="btn btn-primary me-2" (click)="update(task)">
+                        <i class="fas fa-pen white-text"></i>
                     </button>
                     <button class="btn btn-danger" (click)="delete(task)">
-                        <mdb-icon far icon="trash-alt" class="white-text"></mdb-icon>
+                        <i class="far fa-trash-alt white-text"></i>
                     </button>
-                </mdb-card-footer>
-            </mdb-card>
+                </div>
+            </div>
         </div>
 
         <div class="align-self-center mt-3">
@@ -49,12 +49,12 @@
 </ng-container>
 
 <div class="fabs d-flex flex-column">
-    <a class="indigo text-white mb-2" (click)="importTasks()" title="Import tasks json file" mdbWavesEffect>
-        <mdb-icon fas icon="file-upload" class="white-text d-flex align-items-center justify-content-center"></mdb-icon>
+    <a role="button" class="bg-primary text-white mb-2" (click)="importTasks()" title="Import tasks json file" mdbWavesEffect>
+        <i class="fas fa-file-upload white-text d-flex align-items-center justify-content-center"></i>
     </a>
 
-    <a class="green text-white" (click)="addTask()" title="Add task" mdbWavesEffect>
-        <mdb-icon fas icon="plus" class="white-text d-flex align-items-center justify-content-center"></mdb-icon>
+    <a role="button" class="bg-success text-white" (click)="addTask()" title="Add task" mdbWavesEffect>
+        <i class="fas fa-plus white-text d-flex align-items-center justify-content-center"></i>
     </a>
 </div>
 
@@ -62,8 +62,3 @@
     <del *ngIf="strike">{{text}}</del>
     <ng-container *ngIf="!strike">{{text}}</ng-container>
 </ng-template>
-
-<save-or-update-task-popup [(display)]="displayPopup" [task]="taskToUpdate" (onClose)="taskToUpdate = undefined"
-    (onSuccess)="reloadTasks()"></save-or-update-task-popup>
-
-<import-tasks-popup [(display)]="displayImportTasksPopup" (onSuccess)="reloadTasks()"></import-tasks-popup>

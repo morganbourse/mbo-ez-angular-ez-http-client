@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ModalDirective } from 'angular-bootstrap-md';
-import { Subscription } from 'rxjs';
+import {
+  Component
+} from '@angular/core';
+import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { Task } from 'src/app/core/models/tasks/task.model';
 import { TaskService } from 'src/app/core/services/task.service';
 import { ToastService } from 'src/app/core/services/toast.service';
@@ -8,53 +9,18 @@ import { ToastService } from 'src/app/core/services/toast.service';
 @Component({
   selector: 'import-tasks-popup',
   templateUrl: './import-tasks-popup.component.html',
-  styleUrls: ['./import-tasks-popup.component.scss']
+  styleUrls: ['./import-tasks-popup.component.scss'],
 })
-export class ImportTasksPopupComponent implements OnChanges, OnDestroy {
-  @ViewChild(ModalDirective) 
-  private modal: ModalDirective | undefined;
-
-  private onHiddenSubscription?: Subscription;
-
-  @Input()
-  display!: boolean;
-
-  @Output()
-  displayChange: EventEmitter<boolean>;
-
-  @Output()
-  onClose: EventEmitter<any>;
-
-  @Output()
-  onSuccess: EventEmitter<Array<Task>>;
-
+export class ImportTasksPopupComponent {
   file!: File;
 
   displayFileRequired = false;
 
-  constructor(private taskService: TaskService, private notifyService: ToastService) {
-    this.displayChange = new EventEmitter();
-    this.onClose = new EventEmitter();
-    this.onSuccess = new EventEmitter();
-
-    this.onHiddenSubscription = this.modal?.onHidden.subscribe(() => {
-      this.onClose.emit();
-    });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.display.currentValue === true) {
-      this.modal?.show();
-    } else {
-      this.modal?.hide();
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.onHiddenSubscription && !this.onHiddenSubscription.closed) {
-      this.onHiddenSubscription.unsubscribe();
-    }
-  }
+  constructor(
+    private taskService: TaskService,
+    private notifyService: ToastService,
+    private modalRef: MdbModalRef<ImportTasksPopupComponent>
+  ) { }
 
   onFileSelected(event: any): void {
     this.file = event.target.files ? event.target.files[0] : undefined;
@@ -64,9 +30,8 @@ export class ImportTasksPopupComponent implements OnChanges, OnDestroy {
   /**
    * Close the current modal instance
    */
-  close(): void {
-    this.display = false;
-    this.displayChange.emit(false);
+  close(tasks?: Array<Task>): void {
+    this.modalRef?.close(tasks);
   }
 
   /**
@@ -78,13 +43,19 @@ export class ImportTasksPopupComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    this.taskService.importTasks(this.file).then((tasks) => {
-      this.onSuccess.emit(tasks);
-      this.close();
-      this.notifyService.success(`${tasks.length} tasks imported successfully !`);
-    }).catch((e) => {
-      this.notifyService.error('An error has occured pending tasks import...');
-      console.error(e);
-    });
+    this.taskService
+      .importTasks(this.file)
+      .then((tasks) => {
+        this.notifyService.success(
+          `${tasks.length} tasks imported successfully !`
+        );
+        this.close(tasks);
+      })
+      .catch((e) => {
+        this.notifyService.error(
+          'An error has occurred pending tasks import...'
+        );
+        console.error(e);
+      });
   }
 }

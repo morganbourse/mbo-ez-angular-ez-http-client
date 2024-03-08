@@ -1,9 +1,11 @@
 <form class="md-form active-cyan-1 text-white d-flex flex-row align-items-baseline">
     <div class="d-flex flex-row align-items-baseline">
-        <input id="searchInput" class="form-control form-control-sm mr-3 text-white" type="text" placeholder="Search" aria-label="Search" mdbInput #searchInput>
-        <mdb-icon class="align-self-center" fas icon="search" aria-hidden="true"></mdb-icon>
+        <mdb-form-control class="form-white">
+            <input mdbInput type="text" id="formWhite" class="form-control" #searchInput />
+            <label mdbLabel class="form-label" for="formWhite"><i class="align-self-center fas fa-search" aria-hidden="true"></i> Search</label>
+        </mdb-form-control>
     </div>
-    <select class="browser-default custom-select ml-3" (change)="onStateFilterChanged($event)">
+    <select class="form-select form-select-sm ms-3" (change)="onStateFilterChanged($event)">
         <option *ngFor="let item of taskStateFilterEnum | keyvalue">{{item.key}}</option>
-      </select>
+    </select>
 </form>

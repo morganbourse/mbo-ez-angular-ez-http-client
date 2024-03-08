@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ModalDirective } from 'angular-bootstrap-md';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { PartialTask } from 'src/app/core/models/tasks/partial-task.model';
 import { Task } from 'src/app/core/models/tasks/task.model';
 import { TaskService } from 'src/app/core/services/task.service';
@@ -10,65 +9,31 @@ import { TaskService } from 'src/app/core/services/task.service';
   templateUrl: './save-or-update-task-popup.component.html',
   styleUrls: ['./save-or-update-task-popup.component.scss']
 })
-export class SaveOrUpdateTaskPopupComponent implements OnChanges, OnDestroy {
-  @ViewChild(ModalDirective) 
-  private modal: ModalDirective | undefined;
-
-  private onHiddenSubscription?: Subscription;
-
-  @Input()
-  display!: boolean;
-
-  @Output()
-  displayChange: EventEmitter<boolean>;
-
-  @Output()
-  onClose: EventEmitter<any>;
-
-  @Input()
-  task?: Task;
-
-  @Output()
-  onSuccess: EventEmitter<Task>;
-
+export class SaveOrUpdateTaskPopupComponent {
+  _task!: Task;
   taskModel!: PartialTask;
+  text!: string;
 
-  constructor(private taskService: TaskService) {
-    this.displayChange = new EventEmitter();
-    this.onClose = new EventEmitter();
-    this.onSuccess = new EventEmitter();
-
-    this.onHiddenSubscription = this.modal?.onHidden.subscribe(() => {
-      this.onClose.emit();
-    });
+  set task(task: Task) {
+    this._task = task;
+    this.taskModel = { ...task };
+    this.text = !!task?.id ? 'UPDATE' : 'ADD';
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.display.currentValue === true) {
-      this.modal?.show();
-    } else {
-      this.modal?.hide();
-    }
-
-    if (changes.task && changes.task.currentValue) {
-      this.taskModel = {name: changes.task.currentValue.name, description: changes.task.currentValue.description};
-    } else {
-      this.taskModel = {name: '', description: ''};
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.onHiddenSubscription && !this.onHiddenSubscription.closed) {
-      this.onHiddenSubscription.unsubscribe();
-    }
+  constructor(
+    private taskService: TaskService,
+    private modalRef: MdbModalRef<SaveOrUpdateTaskPopupComponent>
+  ) {
+    console.log('Open !');
   }
 
   /**
    * Close the current modal instance
+   * 
+   * @param task The updated task
    */
-  close(): void {
-    this.display = false;
-    this.displayChange.emit(false);
+  close(task?: Task): void {
+    this.modalRef?.close(task);
   }
 
   /**
@@ -76,15 +41,14 @@ export class SaveOrUpdateTaskPopupComponent implements OnChanges, OnDestroy {
    */
   createOrUpdate(): void {
     let promise: Promise<Task>;
-    if (this.task) {
-      promise = this.taskService.updateTask(this.task.id, this.taskModel!);
+    if (!!this._task?.id) {
+      promise = this.taskService.updateTask(this._task.id, this.taskModel!);
     } else {
-      promise = this.taskService.addTask(this.taskModel!);
+      promise = this.taskService.addTask({ ...this.taskModel });
     }
 
     promise.then((updatedTask: Task) => {
-      this.onSuccess.emit(updatedTask);
-      this.close();
+      this.close(updatedTask);
     });
   }
 }
