@@ -41,8 +41,8 @@ npm install @mbo-ez-angular/ez-http-client
 
 ## Peer dependencies
 
-* @angular/common: >=12.0.0
-* @angular/core: >=12.0.0
+* @angular/common: >=14.0.0
+* @angular/core: >=14.0.0
 * rxjs: >=6.0.0
 
 ## Setup
