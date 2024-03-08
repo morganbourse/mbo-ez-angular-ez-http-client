@@ -3,6 +3,7 @@ import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { PartialTask } from 'src/app/core/models/tasks/partial-task.model';
 import { Task } from 'src/app/core/models/tasks/task.model';
 import { TaskService } from 'src/app/core/services/task.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'save-or-update-task-popup',
@@ -22,6 +23,7 @@ export class SaveOrUpdateTaskPopupComponent {
 
   constructor(
     private taskService: TaskService,
+    private notifyService: ToastService,
     private modalRef: MdbModalRef<SaveOrUpdateTaskPopupComponent>
   ) {
     console.log('Open !');
@@ -48,6 +50,10 @@ export class SaveOrUpdateTaskPopupComponent {
     }
 
     promise.then((updatedTask: Task) => {
+      const verb = !!this._task?.id ? 'updated' : 'created';
+      this.notifyService.success(
+        `${updatedTask.name} ${verb} successfully !`
+      );
       this.close(updatedTask);
     });
   }

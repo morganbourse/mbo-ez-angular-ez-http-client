@@ -106,8 +106,8 @@ export class TodoListComponent implements OnInit {
         task: this.taskToUpdate
       }
     }).onClose.subscribe({
-      next: (tasks) => {
-        if (!!tasks?.length) {
+      next: (task) => {
+        if (!!task) {
           this.reloadTasks();
         }
       }
@@ -118,9 +118,9 @@ export class TodoListComponent implements OnInit {
     this.modalService.open(ImportTasksPopupComponent, {
       modalClass: 'modal-dialog-centered'
     }).onClose.subscribe({
-      next: (task) => {
+      next: (tasks) => {
         this.taskToUpdate = undefined;
-        if (!!task) {
+        if (!!tasks.length) {
           this.reloadTasks();
         }
       }
