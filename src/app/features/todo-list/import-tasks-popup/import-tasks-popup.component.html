@@ -10,7 +10,7 @@
       </div>
 
       <div class="modal-body">
-        <label for="formFile" class="form-label">Tasks CSV file</label>
+        <label for="formFile" class="form-label">Tasks JSON file</label>
         <input class="form-control form-control-lg" id="formFile" type="file" accept=".json" (change)="onFileSelected($event)" />
         <div class="text-danger mt-2" *ngIf="displayFileRequired">
           <mdb-icon fas icon="exclamation-circle" class="text-danger"></mdb-icon>
