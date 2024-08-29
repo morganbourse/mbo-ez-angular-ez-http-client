@@ -1,10 +1,23 @@
-import { EzHttpClient, EzHttpClientCommonResponseOperators, EzHttpClientHeaders, EzHttpQueryParam, EzHttpPartFile, EzHttpRequestBody, EzHttpRequestDELETE, EzHttpRequestGET, EzHttpRequestParam, EzHttpRequestPOST, EzHttpRequestPUT, EzHttpResponse } from "ez-http-client-lib";
-import { Observable, throwError } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { CoreModule } from "../core.module";
-import { Page } from "../models/page.model";
-import { PartialTask } from "../models/tasks/partial-task.model";
-import { Task } from "../models/tasks/task.model";
+import {
+  EzHttpClient,
+  EzHttpClientCommonResponseOperators,
+  EzHttpClientHeaders,
+  EzHttpPartFile,
+  EzHttpQueryParam,
+  EzHttpRequestBody,
+  EzHttpRequestDELETE,
+  EzHttpRequestGET,
+  EzHttpRequestParam,
+  EzHttpRequestPOST,
+  EzHttpRequestPUT,
+  EzHttpResponse
+} from "ez-http-client-lib";
+import {Observable, throwError} from "rxjs";
+import {catchError} from "rxjs/operators";
+import {CoreModule} from "../core.module";
+import {Page} from "../models/page.model";
+import {PartialTask} from "../models/tasks/partial-task.model";
+import {Task} from "../models/tasks/task.model";
 
 @EzHttpClientHeaders({
     'Content-Type': 'application/json'

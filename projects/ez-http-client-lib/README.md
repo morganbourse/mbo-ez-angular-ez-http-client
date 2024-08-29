@@ -9,23 +9,26 @@
 
 </div>
 
-## Sommaire <!-- omit in toc -->
+## Sommaire
 
-- [Features](#features)
-- [Install](#install)
-- [Peer dependencies](#peer-dependencies)
-- [Setup](#setup)
-- [Usage](#usage)
-  - [Service declaration](#service-declaration)
-  - [Declare default http headers for any request](#declare-default-http-headers-for-any-request)
-  - [Declare global response operators](#declare-global-response-operators)
-  - [Endpoint call declaration](#endpoint-call-declaration)
-  - [Declare a request parameter](#declare-a-request-parameter)
-  - [Declare a query parameter](#declare-a-query-parameter)
-  - [Declare a request body](#declare-a-request-body)
-  - [Declare a multi part form data request](#declare-a-multi-part-form-data-request)
-  - [Map the result observable into method parameter](#map-the-result-observable-into-method-parameter)
-- [Demo](#demo)
+<!-- TOC -->
+  * [Features](#features)
+  * [Install](#install)
+  * [Peer dependencies](#peer-dependencies)
+  * [Setup](#setup)
+  * [Usage](#usage)
+    * [Service declaration](#service-declaration)
+    * [Declare default http headers for any request](#declare-default-http-headers-for-any-request)
+    * [Declare global response operators](#declare-global-response-operators)
+    * [Endpoint call declaration](#endpoint-call-declaration)
+    * [Declare a dynamic header](#declare-a-dynamic-header)
+    * [Declare a request parameter](#declare-a-request-parameter)
+    * [Declare a query parameter](#declare-a-query-parameter)
+    * [Declare a request body](#declare-a-request-body)
+    * [Declare a multi part form data request](#declare-a-multi-part-form-data-request)
+    * [Map the result observable into method parameter](#map-the-result-observable-into-method-parameter)
+  * [Demo](#demo)
+<!-- TOC -->
 
 ## Features
 
@@ -188,6 +191,19 @@ export class ClientsService {
     public getClients(): Promise<any> {
         return Promise.resolve(null);
     }
+}
+```
+
+### Declare a dynamic header
+
+To declare dynamic http header use the decorator `@EzHttpHeader`.
+This decorator takes the name of the header in argument (here `X-Custom-Header` for example).
+
+Example :
+```ts
+@EzHttpRequestGET()
+public getSortedClients(@EzHttpHeader('X-Custom-Header') customHeader?: string): Observable<any> {
+    return of(null);
 }
 ```
 

@@ -10,6 +10,7 @@ import { EzHttpParameterDescriptor } from './models/ez-http-parameter-descriptor
 import { EzHttpReponseOperatorsOptions } from './models/ez-http-client-response-oeprators-options.model';
 import { EZ_REQUEST_PART_DATA_META_KEY } from './ez-http-part-data.decorator';
 import { EZ_REQUEST_PART_FILE_META_KEY } from './ez-http-part-file.decorator';
+import { EZ_REQUEST_HEADER_META_KEY } from "./ez-http-header.decorator";
 
 /**
  * Http call options
@@ -145,7 +146,7 @@ function resolveUrl(
  * @param ezQueryParams The list of query params (like ?name=Toto&surname=Titi)
  * @returns The built HttpOptions
  */
-function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<EzHttpParameterDescriptor>, args: Array<any>, targetObject: any): HttpOptions {
+function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<EzHttpParameterDescriptor>, ezRequestHeaders: Array<EzHttpParameterDescriptor>, args: Array<any>, targetObject: any): HttpOptions {
     const httpOptions: HttpOptions = {};
     const globalHeaders = targetObject.constructor.EZ_HTTP_CLIENT_GLOBAL_HEADERS;
     if (globalHeaders) {
@@ -158,6 +159,16 @@ function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<Ez
             stripContentType(httpOptions);
             httpOptions.headers['Content-Type'] = options.consume;
         }
+    }
+
+    if (ezRequestHeaders?.length) {
+      ezRequestHeaders.forEach(paramDescriptor => {
+        const paramValue: any = args[paramDescriptor.index];
+        if (paramValue) {
+          // @ts-ignore: object is possibly 'null'.
+          httpOptions.headers[paramDescriptor.paramName] = paramValue;
+        }
+      });
     }
 
     if (options.responseType) {
@@ -204,7 +215,7 @@ function stripContentType(httpOptions: HttpOptions): void {
  * @param httpMethod The http method to use
  * @param httpOptions The http call options
  * @param body The request body
- * @param pipes The rxjs pipe (with rxjs operators)
+ * @param responseOperators rxjs operators to apply to the response
  */
 function doCall(httpClient: HttpClient, url: string, httpMethod: EzHttpRequestMethod, httpOptions: HttpOptions, body: any, responseOperators?: Array<OperatorFunction<any, any>>): Observable<any> {
     let responseObservable: Observable<any>;
@@ -278,6 +289,8 @@ function apply(target: any,
 
     const ezQueryParams: Array<EzHttpParameterDescriptor> =
         Reflect.getOwnMetadata(EZ_REQUEST_QUERY_PARAMS_META_KEY, target, key.toString()) || [];
+    const ezRequestHeaders: Array<EzHttpParameterDescriptor> =
+      Reflect.getOwnMetadata(EZ_REQUEST_HEADER_META_KEY, target, key.toString()) || [];
     const ezBody: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_REQUEST_BODY_META_KEY, target, key.toString());
     const ezPartDatas: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_REQUEST_PART_DATA_META_KEY, target, key.toString()) || [];
     const ezPartFiles: Array<EzHttpParameterDescriptor> = Reflect.getOwnMetadata(EZ_REQUEST_PART_FILE_META_KEY, target, key.toString()) || [];
@@ -293,7 +306,7 @@ function apply(target: any,
 
         const url: string = resolveUrl(target, hasParameters, ezRequestParams, options!, args);
 
-        const httpOptions: HttpOptions = buildHttpOptions(options!, ezQueryParams, args, target);
+        const httpOptions: HttpOptions = buildHttpOptions(options!, ezQueryParams, ezRequestHeaders, args, target);
         const body: any = ezBody?.length ? args[ezBody[0].index] : {};
         const multiPartFormData: FormData = buildMultipartFormData(args, ezPartDatas, ezPartFiles, body);
 
