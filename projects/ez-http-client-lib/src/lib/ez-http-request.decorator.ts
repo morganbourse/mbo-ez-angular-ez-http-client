@@ -144,6 +144,9 @@ function resolveUrl(
  *
  * @param options The EzHttpRequest options
  * @param ezQueryParams The list of query params (like ?name=Toto&surname=Titi)
+ * @param ezRequestHeaders The list of request headers
+ * @param args The list of method args
+ * @param targetObject The target object (the current object class)
  * @returns The built HttpOptions
  */
 function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<EzHttpParameterDescriptor>, ezRequestHeaders: Array<EzHttpParameterDescriptor>, args: Array<any>, targetObject: any): HttpOptions {
@@ -162,6 +165,7 @@ function buildHttpOptions(options: EzHttpRequestOptions, ezQueryParams: Array<Ez
     }
 
     if (ezRequestHeaders?.length) {
+      httpOptions.headers = httpOptions.headers || {};
       ezRequestHeaders.forEach(paramDescriptor => {
         const paramValue: any = args[paramDescriptor.index];
         if (paramValue) {

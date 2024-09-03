@@ -12,22 +12,22 @@
 ## Sommaire
 
 <!-- TOC -->
-  * [Features](#features)
-  * [Install](#install)
-  * [Peer dependencies](#peer-dependencies)
-  * [Setup](#setup)
-  * [Usage](#usage)
-    * [Service declaration](#service-declaration)
-    * [Declare default http headers for any request](#declare-default-http-headers-for-any-request)
-    * [Declare global response operators](#declare-global-response-operators)
-    * [Endpoint call declaration](#endpoint-call-declaration)
-    * [Declare a dynamic header](#declare-a-dynamic-header)
-    * [Declare a request parameter](#declare-a-request-parameter)
-    * [Declare a query parameter](#declare-a-query-parameter)
-    * [Declare a request body](#declare-a-request-body)
-    * [Declare a multi part form data request](#declare-a-multi-part-form-data-request)
-    * [Map the result observable into method parameter](#map-the-result-observable-into-method-parameter)
-  * [Demo](#demo)
+* [Features](#features)
+* [Install](#install)
+* [Peer dependencies](#peer-dependencies)
+* [Setup](#setup)
+* [Usage](#usage)
+  * [Service declaration](#service-declaration)
+  * [Declare default http headers for any request](#declare-default-http-headers-for-any-request)
+  * [Declare global response operators](#declare-global-response-operators)
+  * [Endpoint call declaration](#endpoint-call-declaration)
+  * [Declare a dynamic header](#declare-a-dynamic-header)
+  * [Declare a request parameter](#declare-a-request-parameter)
+  * [Declare a query parameter](#declare-a-query-parameter)
+  * [Declare a request body](#declare-a-request-body)
+  * [Declare a multi part form data request](#declare-a-multi-part-form-data-request)
+  * [Map the result observable into method parameter](#map-the-result-observable-into-method-parameter)
+* [Demo](#demo)
 <!-- TOC -->
 
 ## Features
@@ -203,7 +203,7 @@ Example :
 ```ts
 @EzHttpRequestGET()
 public getSortedClients(@EzHttpHeader('X-Custom-Header') customHeader?: string): Observable<any> {
-    return of(null);
+  return of(null);
 }
 ```
 
@@ -219,12 +219,12 @@ Example :
 ```ts
 @EzHttpClient('/api/clients', CoreModule)
 export class ClientsService {
-    @EzHttpRequestGET({
-        path: '/{clientId}'
-    })
-    public getClientById(@EzHttpRequestParam('clientId') id: string): Promise<any> {
-        return Promise.resolve(null);
-    }
+  @EzHttpRequestGET({
+    path: '/{clientId}'
+  })
+  public getClientById(@EzHttpRequestParam('clientId') id: string): Promise<any> {
+    return Promise.resolve(null);
+  }
 }
 ```
 
@@ -239,7 +239,7 @@ Example :
 ```ts
 @EzHttpRequestGET()
 public getSortedClients(@EzHttpQueryParam('sort_dir') direction: 'asc' | 'desc'): Observable<any> {
-    return of(null);
+  return of(null);
 }
 ```
 
@@ -251,7 +251,7 @@ Example :
 ```ts
 @EzHttpRequestPOST()
 public addClient(@EzHttpRequestBody client: {firstname: string, lastname: string}): Observable<any> {
-    return of(null);
+  return of(null);
 }
 ```
 
@@ -263,7 +263,7 @@ Example :
 ```ts
 @EzHttpRequestPOST()
 public addClient(@EzHttpPartFile('myFile') file: File, @EzHttpPartData('descriptorData') descriptorData: { creationDate: Date, summary: string }, @EzHttpPartData('name') name: string): Observable<any> {
-    return of(null);
+  return of(null);
 }
 ```
 
@@ -275,8 +275,8 @@ For example this way to do allows you to get file `myFile` and field `descriptor
 ```java
 @RequestMapping(path = "/import", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 void import(@RequestPart(name = "myFile", required = false) final MultipartFile file, @RequestPart("descriptorData") final DescriptorDataDto descriptorDataDto) {
-    [...]
-}
+  [...]
+  }
 ```
 
 ### Map the result observable into method parameter
@@ -287,11 +287,11 @@ Example (transform observable to promise or make some pipes if you dont want to 
 ```ts
 @EzHttpRequestGET()
 public getClients(@EzHttpResponse response?: Observable<any>): Promise<any> {
-    return response!.pipe(
-      tap(val => {
-        console.log('Http response received !');
-      })
-    ).toPromise();
+  return response!.pipe(
+    tap(val => {
+      console.log('Http response received !');
+    })
+  ).toPromise();
 }
 ```
 
